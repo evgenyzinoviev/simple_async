@@ -1,7 +1,7 @@
 simple_async
 ============
 
-Simple JS async flow control library
+Simple JavaScript async flow control library.
 
 ### queue
 
