@@ -56,6 +56,9 @@
   };
   Queue.prototype.next = function() {
     if (!this.fs.length) {
+      if (arguments.length) {
+        this.doneData = argumentsToArray(arguments);
+      }
       this.setState(STATE_DONE);
       return;
     }

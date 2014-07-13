@@ -29,7 +29,6 @@ var q = queue(
   // val1 = 3, val2 = 4
 })
 .onError(function(err) {
-  
 });
 ```
 
