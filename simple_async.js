@@ -26,35 +26,7 @@
     }
     return fs;
   }
-  function inherit(Child, Parent) {
-    var F = function() {};
-    F.prototype = Parent.prototype;
-    Child.prototype = new F();
-    Child.prototype.constructor = Child;
-    Child.superclass = Parent.prototype;
-  };
 
-  function Base() {}
-  Base.prototype.onDone = function(f) {
-    this.onDoneCallback = f;
-    return this;
-  };
-  Base.prototype.onError = function(f) {
-    this.onErrorCallback = f;
-    return this;
-  };
-  Base.prototype.run = function() {
-    if (this.state == STATE_CREATED) {
-      this.setState(STATE_STARTED);
-    }
-  };
-
-  // Public API:
-  // onDone()
-  // onError()
-  // next()
-  // done()
-  // error()
   function Queue(fs) {
     this.fs = fs;
     this.state = STATE_CREATED;
@@ -69,8 +41,19 @@
       self.run();
     }, 0);
   }
-  inherit(Queue, Base);
-
+  Queue.prototype.onDone = function(f) {
+    this.onDoneCallback = f;
+    return this;
+  };
+  Queue.prototype.onError = function(f) {
+    this.onErrorCallback = f;
+    return this;
+  };
+  Queue.prototype.run = function() {
+    if (this.state == STATE_CREATED) {
+      this.setState(STATE_STARTED);
+    }
+  };
   Queue.prototype.next = function() {
     if (!this.fs.length) {
       this.setState(STATE_DONE);
@@ -124,15 +107,22 @@
     this.dones = [];
     this.result = [];
     this.onDoneCallback = null;
-    this.onErrorCallback = null;
 
     var self = this;
     setTimeout(function() {
       self.run();
     }, 0);
   }
-  inherit(Parallel, Base);
 
+  Parallel.prototype.onDone = function(f) {
+    this.onDoneCallback = f;
+    return this;
+  };
+  Parallel.prototype.run = function() {
+    if (this.state == STATE_CREATED) {
+      this.setState(STATE_STARTED);
+    }
+  };
   Parallel.prototype.runAll = function() {
     var i;
     for (i = 0; i < this.fs.length; i++) {
